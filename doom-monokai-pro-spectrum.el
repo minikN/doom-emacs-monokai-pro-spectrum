@@ -52,7 +52,12 @@
    (yellow     '("#fce566" "#f0e68c" "yellow"       ))
    (violet     '("#948ae3" "#9370db" "magenta"      ))
    (cyan       '("#5ad4e6" "#40e0d0" "brightcyan"   ))
-
+   (magenta     cyan)
+   (blue        cyan)
+   (dark-blue   cyan)
+   (teal        cyan)
+   (dark-cyan   cyan)
+   
    ;; face categories -- required for all themes
    (highlight      red)
    (vertical-bar   (doom-darken base1 0.1))
@@ -160,5 +165,5 @@
   ;; --- extra variables ---------------------
   ()
   )
-(provide 'doom-monokai-pro-spectrum-theme)
+(provide 'doom-monokai-pro-spectrum)
 ;;; doom-monokai-pro-spectrum-theme.el ends here
