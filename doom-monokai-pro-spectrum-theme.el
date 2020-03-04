@@ -165,5 +165,7 @@
   ;; --- extra variables ---------------------
   ()
   )
-(provide 'doom-monokai-pro-spectrum)
+(provide-theme 'doom-monokai-pro-spectrum)
+
+(provide 'doom-monokai-pro-spectrum-theme)
 ;;; doom-monokai-pro-spectrum-theme.el ends here
