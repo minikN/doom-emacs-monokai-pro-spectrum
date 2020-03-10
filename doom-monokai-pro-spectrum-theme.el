@@ -27,7 +27,7 @@
   :type '(choice integer boolean))
 
 ;;
-(def-doom-theme monokai-pro-spectrum
+(def-doom-theme doom-monokai-pro-spectrum
   "Monokai Pro's Spectrum flavor by Wimer Hazenberg"
 
   ;; name        default   256       16
@@ -165,7 +165,8 @@
   ;; --- extra variables ---------------------
   ()
   )
-(provide-theme 'doom-monokai-pro-spectrum)
 
-(provide 'doom-monokai-pro-spectrum-theme)
+;;;###autoload
+(add-to-list 'custom-theme-load-path (file-name-directory load-file-name))
+
 ;;; doom-monokai-pro-spectrum-theme.el ends here
