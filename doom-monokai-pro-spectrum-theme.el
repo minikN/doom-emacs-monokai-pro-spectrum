@@ -59,7 +59,7 @@
    (dark-cyan   cyan)
    
    ;; face categories -- required for all themes
-   (highlight      red)
+   (highlight      yellow)
    (vertical-bar   (doom-darken base1 0.1))
    (selection      yellow)
    (builtin        violet)
