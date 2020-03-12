@@ -1,38 +1,35 @@
-;;; doom-monokai-pro-spectrum-theme.el --- Monokai Pro's Spectrum flavor -*- no-byte-compile: t; -*-
+;; doom-monokai-pro-spectrum-theme.el --- inspired by Textmate's Monokai -*- no-byte-compile: t; -*-
 (require 'doom-themes)
 
-;;; Code:
+;;
 (defgroup doom-monokai-pro-spectrum-theme nil
-  "Options for doom-themes"
+  "Options for doom-molokai."
   :group 'doom-themes)
-
-(defcustom doom-monokai-pro-spectrum-brighter-modeline nil
-  "If non-nil, more vivid colors will be used to style the mode-line."
-  :group 'monokai-pro-spectrum-theme
-  :type 'boolean)
 
 (defcustom doom-monokai-pro-spectrum-brighter-comments nil
   "If non-nil, comments will be highlighted in more vivid colors."
-  :group 'monokai-pro-spectrum-theme
+  :group 'doom-monokai-pro-spectrum-theme
   :type 'boolean)
 
 (defcustom doom-monokai-pro-spectrum-comment-bg doom-monokai-pro-spectrum-brighter-comments
-  "If non-nil, comments will have a subtle, darker background. Enhancing their legibility."
-  :group 'monokai-pro-spectrum-theme
+  "If non-nil, comments will have a subtle, darker background. Enhancing their
+legibility."
+  :group 'doom-monokai-pro-spectrum-theme
   :type 'boolean)
 
 (defcustom doom-monokai-pro-spectrum-padded-modeline doom-themes-padded-modeline
-  "If non-nil, adds a 4px padding to the mode-line. Can be an integer to determine the exact padding."
-  :group 'monokai-pro-spectrum-theme
+  "If non-nil, adds a 4px padding to the mode-line. Can be an integer to
+determine the exact padding."
+  :group 'doom-monokai-pro-spectrum-theme
   :type '(choice integer boolean))
 
 ;;
 (def-doom-theme doom-monokai-pro-spectrum
-  "Monokai Pro's Spectrum flavor by Wimer Hazenberg"
+  "A dark, vibrant theme inspired by Textmate's Monokai."
 
-  ;; name        default   256       16
-  ((bg         '("#191919" nil       nil            ))
-   (bg-alt     '("#222222" nil       nil            ))
+  ;; name        gui       256       16
+  ((bg         '("#222222" nil       nil            ))
+   (bg-alt     '("#191919" nil       nil            ))
    (base0      '("#131313" "#121212" "black"        ))
    (base1      '("#191919" "#1c1c1c" "black"        ))
    (base2      '("#2d2c2d" "#262626" "brightblack"  ))
@@ -57,24 +54,24 @@
    (dark-blue   cyan)
    (teal        cyan)
    (dark-cyan   cyan)
-   
-   ;; face categories -- required for all themes
+
+   ;; face categories
    (highlight      yellow)
-   (vertical-bar   (doom-darken base1 0.1))
-   (selection      yellow)
+   (vertical-bar   (doom-lighten bg 0.1))
+   (selection      base2)
    (builtin        violet)
-   (comments       (if doom-monokai-pro-spectrum-brighter-comments cyan base5))
-   (doc-comments   (doom-lighten (if doom-monokai-pro-spectrum-brighter-comments cyan base5) 0.25))
+   (comments       (if doom-monokai-pro-spectrum-brighter-comments violet base5))
+   (doc-comments   (if doom-monokai-pro-spectrum-brighter-comments (doom-lighten violet 0.1) (doom-lighten base5 0.25)))
    (constants      violet)
    (functions      green)
-   (keywords       red)
+   (keywords       magenta)
    (methods        green)
    (operators      red)
    (type           cyan)
    (strings        yellow)
-   (variables      (doom-lighten violet 0.4))
+   (variables      fg)
    (numbers        violet)
-   (region         `(,(doom-lighten (car bg-alt) 0.15) ,@(doom-lighten (cdr base1) 0.35)))
+   (region         base2)
    (error          red)
    (warning        yellow)
    (success        green)
@@ -82,93 +79,122 @@
    (vc-added       green)
    (vc-deleted     red)
 
-      ;; custom categories
+   ;; custom categories
    (hidden     `(,(car bg) "black" "black"))
-   (-modeline-bright doom-monokai-pro-spectrum-brighter-modeline)
    (-modeline-pad
     (when doom-monokai-pro-spectrum-padded-modeline
       (if (integerp doom-monokai-pro-spectrum-padded-modeline) doom-monokai-pro-spectrum-padded-modeline 4)))
 
-   (modeline-fg     fg)
-   (modeline-fg-alt base5)
+   (modeline-fg nil)
+   (modeline-fg-alt base4)
 
-   (modeline-bg
-    (if -modeline-bright
-        (doom-darken cyan 0.475)
-      `(,(doom-darken (car bg-alt) 0.15) ,@(cdr base0))))
-   (modeline-bg-l
-    (if -modeline-bright
-        (doom-darken cyan 0.45)
-      `(,(doom-darken (car bg-alt) 0.1) ,@(cdr base0))))
-   (modeline-bg-inactive   `(,(doom-darken (car bg-alt) 0.1) ,@(cdr bg-alt)))
-   (modeline-bg-inactive-l `(,(car bg-alt) ,@(cdr base1))))
+   (modeline-bg base1)
+   (modeline-bg-inactive (doom-darken base2 0.2))
+
+   (org-quote `(,(doom-lighten (car bg) 0.05) "#1f1f1f")))
 
 
   ;; --- extra faces ------------------------
-  ((elscreen-tab-other-screen-face :background "#353a42" :foreground "#1e2022")
+  ((cursor                                       :background fg)
+   (default                                      :foreground fg :background bg)
 
-   (evil-goggles-default-face :inherit 'region :background (doom-blend region bg 0.5))
+   ;;; I-search
+   (match                                        :foreground fg :background base4)
+   (isearch                                      :inherit 'match :box `(:line-width 2 :color ,yellow))
+   (lazy-highlight                               :inherit 'match)
+   (isearch-fail                                 :foreground red)
 
-   ((line-number &override) :foreground base4)
-   ((line-number-current-line &override) :foreground fg)
+   ;;; mode-line
+   (mode-line                                    :background modeline-bg :foreground modeline-fg
+                                                 :box (if -modeline-pad `(:line-width ,-modeline-pad :color modeline-bg)))
+   (mode-line-inactive                           :background modeline-bg-inactive :foreground modeline-fg-alt
+                                                 :box (if -modeline-pad `(:line-width ,-modeline-pad :color modeline-bg-inactive)))
 
-   (font-lock-comment-face
-    :foreground comments
-    :background (if doom-monokai-pro-spectrum-comment-bg (doom-lighten bg 0.05)))
-   (font-lock-doc-face
-    :inherit 'font-lock-comment-face
-    :foreground doc-comments)
-
-   (mode-line
-    :background modeline-bg :foreground modeline-fg
-    :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg)))
-   (mode-line-inactive
-    :background modeline-bg-inactive :foreground modeline-fg-alt
-    :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg-inactive)))
-   (mode-line-emphasis
-    :foreground (if -modeline-bright base8 highlight))
-
-   (solaire-mode-line-face
-    :inherit 'mode-line
-    :background modeline-bg-l
-    :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg-l)))
-   (solaire-mode-line-inactive-face
-    :inherit 'mode-line-inactive
-    :background modeline-bg-inactive-l
-    :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg-inactive-l)))
+   ;; Centaur tabs
+   (centaur-tabs-selected-modified               :inherit 'centaur-tabs-selected :foreground yellow)
+   (centaur-tabs-unselected-modified             :inherit 'centaur-tabs-unselected :foreground yellow)
+   (centaur-tabs-active-bar-face                 :background yellow)
+   (centaur-tabs-modified-marker-selected        :inherit 'centaur-tabs-selected :foreground fg)
+   (centaur-tabs-modified-marker-unselected      :inherit 'centaur-tabs-unselected :foreground fg)
 
    ;; Doom modeline
-   (doom-modeline-bar :background (if -modeline-bright modeline-bg highlight))
-   (doom-modeline-buffer-file :inherit 'mode-line-buffer-id :weight 'bold)
-   (doom-modeline-buffer-path :inherit 'mode-line-emphasis :weight 'bold)
-   (doom-modeline-buffer-project-root :foreground green :weight 'bold)
+   (doom-modeline-bar                            :background yellow)
+   (doom-modeline-buffer-file                    :inherit 'mode-line-buffer-id :weight 'bold)
+   (doom-modeline-buffer-path                    :inherit 'bold :foreground green)
+   (doom-modeline-buffer-project-root            :foreground green :weight 'bold)
+   (doom-modeline-buffer-modified                :inherit 'bold :foreground orange)
 
-   ;; ivy-mode
-   (ivy-current-match :background base3 :distant-foreground fg :weight 'normal)
+   ((line-number &override)                      :foreground base5 :distant-foreground nil)
+   ((line-number-current-line &override)         :foreground base7 :distant-foreground nil)
+
+   ;; ediff
+   (ediff-fine-diff-A                            :background (doom-blend magenta bg 0.3) :weight 'bold)
+
+   ;; evil-mode
+   (evil-search-highlight-persist-highlight-face :background violet)
+
+   ;; evil-snipe
+   (evil-snipe-first-match-face                  :foreground base0 :background green)
+   (evil-snipe-matches-face                      :foreground green :underline t)
+
+   ;; flycheck
+   (flycheck-error                               :underline `(:style wave :color ,red)    :background base3)
+   (flycheck-warning                             :underline `(:style wave :color ,yellow) :background base3)
+   (flycheck-info                                :underline `(:style wave :color ,green)  :background base3)
+
+   ;;; git-gutter
+   (git-gutter:added                             :inherit vc-added)
+   (git-gutter:deleted                           :inherit vc-deleted)
+   (git-gutter:modfied                           :inherit vc-modified)
+   (git-gutter:separator                         :foreground cyan)
+   (git-gutter:unchanged                         :foreground yellow)
+   (git-gutter-fr:added                          :inherit git-gutter:added)
+   (git-gutter-fr:deleted                        :inherit git-gutter:deleted)
+   (git-gutter-fr:modfied                        :interit git-gutter:modified)
+   ;; helm
+   (helm-swoop-target-line-face                  :foreground magenta :inverse-video t)
+
+   ;; ivy
+   (ivy-current-match                            :background base3)
+   (ivy-minibuffer-match-face-1                  :background base1 :foreground base4)
+
+   ;; neotree
+   (neo-dir-link-face                            :foreground cyan)
+   (neo-expand-btn-face                          :foreground magenta)
+
+   ;; rainbow-delimiters
+   (rainbow-delimiters-depth-1-face              :foreground magenta)
+   (rainbow-delimiters-depth-2-face              :foreground orange)
+   (rainbow-delimiters-depth-3-face              :foreground green)
+   (rainbow-delimiters-depth-4-face              :foreground cyan)
+   (rainbow-delimiters-depth-5-face              :foreground magenta)
+   (rainbow-delimiters-depth-6-face              :foreground orange)
+   (rainbow-delimiters-depth-7-face              :foreground green)
+
 
    ;; --- major-mode faces -------------------
    ;; css-mode / scss-mode
-   (css-proprietary-property :foreground orange)
-   (css-property             :foreground green)
-   (css-selector             :foreground cyan)
+   (css-proprietary-property                     :foreground keywords)
 
    ;; markdown-mode
-   (markdown-markup-face :foreground base5)
-   (markdown-header-face :inherit 'bold :foreground red)
-   ((markdown-code-face &override) :background (doom-lighten base3 0.05))
+   (markdown-blockquote-face                     :inherit 'italic :foreground dark-blue)
+   (markdown-list-face                           :foreground magenta)
+   (markdown-pre-face                            :foreground cyan)
+   (markdown-link-face                           :inherit 'bold :foreground blue)
+   ((markdown-code-face &override)               :background (doom-lighten base2 0.045))
 
    ;; org-mode
-   (org-hide :foreground hidden)
-   (solaire-org-hide-face :foreground hidden))
+   ((outline-1 &override)                        :foreground magenta)
+   ((outline-2 &override)                        :foreground orange)
+   (org-ellipsis                                 :foreground orange)
+   (org-tag                                      :foreground yellow :bold nil)
+   ((org-quote &override)                        :inherit 'italic :foreground base7 :background org-quote)
+   (org-todo                                     :foreground yellow :bold 'inherit)
+   (org-list-dt                                  :foreground yellow))
 
 
-  ;; --- extra variables ---------------------
-  ()
+  ;; --- extra variables --------------------
+  ;; ()
   )
-
-;;;###autoload
-(when (and (boundp 'custom-theme-load-path) load-file-name)
-  (add-to-list 'custom-theme-load-path
-               (file-name-as-directory (file-name-directory load-file-name))))
 
 ;;; doom-monokai-pro-spectrum-theme.el ends here
